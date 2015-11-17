@@ -129,8 +129,6 @@ inBorderがtrueなら、borderを含め、falseなら含めません。デフォ
 					x: 50, y: 50, color: 'rgba(255,0,255,1)', offset:0.1, agradient: 'rgba(255,0,0,1)'
 				}).start();
 			
-			game.input
-			
 		},
 		update: function(game){
 			
