@@ -1,13 +1,13 @@
 /**
 * @author       Wataru Kanzaki <dab@wi-wi.jp>
 * @copyright    2015 Wicker Wings
-* @version      1.0.0
+* @version      1.0.1
 * @license      {@link https://github.com/heporap/Phaser.iris/blob/master/LICENSE.txt|MIT License}
 */
 (function(constructor){
 	var root = this;
 	
-	if( define && define.amd ){
+	if( typeof define !== 'undefined' && define.amd ){
 		define('gauge', ['Phaser'], constructor);
 		
 	}else if( root.Phaser ){
