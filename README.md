@@ -60,7 +60,34 @@ metrics.borderは矩形の内側に描画します。circle.borderは円の外�
 アイリスをステージから除去します。
 メモリから削除する場合はdestroy()を使用してください。
 
-### autoPlay(fn, thisObject, to, duration, totally, easing)
+### autoPlay(fn, thisObj, properties, duration, ease, delay, repeat, yoyo)
+- fn: コールバック関数
+- thisObject: コールバック関数内でthisにマッピングされるオブジェクト
+- to: プロパティオブジェクト。
+- duration: 指定ミリ秒
+- ease: 再生時間のeasing。デフォルトはPhaser.Easing.Linear.None
+- delay: 未対応
+- repeat: 繰り返し数。デフォルトはyoyoがtrueの時は1、それ以外は0（無制限）
+- yoyo: 繰り返し時に逆向きの動作を行う
+
+戻り値：tweenObj。
+
+toで指定可能なプロパティは以下の通り。
+- x: circle.x
+- y: circle.y
+- radius: circle.radius
+- color: circle.color
+- gradient: circle.gradient
+- offset: circle.offset
+- borderWidth: circle.borderWidth
+- borderColor: circle.borderColor
+- bgColor: box.bgColor
+- bgBorderWidth: box.borderWidth
+- bgBorderColor: box.borderColor
+
+boxのx, y、width, heightを変更する場合は、game.add.tween()を使用してください。
+
+### tween(fn, thisObject, to, duration, totally, easing)
 - fn: コールバック関数
 - thisObject: コールバック関数内でthisにマッピングされるオブジェクト
 - to: 半径を変更する値。省略時は矩形が隠れる数値、または、すでに画面全体が隠れている場合は0。
@@ -70,8 +97,11 @@ metrics.borderは矩形の内側に描画します。circle.borderは円の外�
 
 circle.gradientが指定されていてcircle.offsetが0の場合は、circle.offsetを0.1に変更します。
 
-### stopPlay()
+### stopPlay(tweenObj)
 再生を止めます。
+
+autoPlayの戻り値を指定すると、その再生を止めます。
+tweenObjを指定しない場合は、tween()を停止します。
 
 ### inBox(point, inBorder)
 - point (Phaser.Point) {x, y}
@@ -108,7 +138,7 @@ inBorderがtrueなら、borderを含め、falseなら含めません。デフォ
 					x: 100, y: 0, width: 400, height: 300, bgColor: 'rgba(0,0,0,0)', borderWidth: 2, borderColor: 'rgba(0,255,255,1)'
 				},
 				{//circle
-					radius: 100, color: 'rgba(0,0,255,0)', img:'iris', gradient: 'rgba(255,0,0,1)', offset:0.3, borderWidth:10
+					radius: 400, color: 'rgba(0,0,255,0)', img:'iris', gradient: 'rgba(255,0,0,1)', offset:0.3, borderWidth:10
 				}).start();
 			
 			this.iris2 = game.plugins.add(Phaser.Plugin.Iris, this.pluginGroup);
@@ -132,10 +162,17 @@ inBorderがtrueなら、borderを含め、falseなら含めません。デフォ
 		},
 		update: function(game){
 			
-			if( this.iris1.radius !== 400 && !this.iris1.busy ){
+			if( this.iris1.radius === 400 && !this.iris1.busy ){
+				var repeat = 3;
+				var yoyo = true;
+				var delay = 0;
+				var duration = 2000;
+				var ease = null;
+				var to = {x:100, y:50, radius:100, color: 'rgba(255,0,255,0.9)', offset:0.1, gradient:'rgba(0,255,0,0.3)', borderWidth:30, borderColor:'rgba(255,255,255,1)'};
+				
 				this.iris1.autoPlay(function(){
-					console.log('autoPlay finished', this.iris1.radius);
-				}, this, 400);
+					console.log('autoPlay finished');
+				}, this, to, duration, ease, delay, repeat, yoyo);
 			}
 			
 		}
