@@ -1,7 +1,7 @@
 /**
 * @author       Wataru Kanzaki <dab@wi-wi.jp>
 * @copyright    2015 Wicker Wings
-* @version      2.3
+* @version      2.3.1
 * @license      {@link https://github.com/heporap/Phaser.iris/blob/master/LICENSE.txt|MIT License}
 */
 (function(constructor){
@@ -206,31 +206,6 @@ IrisBox.prototype = Object.create(Phaser.Rectangle.prototype);
 IrisBox.prototype.constructor = IrisBox;
 
 /****
-right
-矩形の右側
-****/
-Object.defineProperty(IrisBox.prototype, 'right', {
-	get: function(){
-		return this.box.x + this.box.width;
-	},
-	set: function(val){
-		this.box.x = val - this.box.width;
-	}
-});
-
-/****
-bottom
-矩形の下側
-****/
-Object.defineProperty(IrisBox.prototype, 'bottom', {
-	get: function(){
-		return this.prop.y + this.prop.height;
-	},
-	set: function(val){
-		this.prop.y = val - this.prop.height;
-	}
-});
-/****
 contentWidth
 コンテンツ幅
 ****/
@@ -257,7 +232,10 @@ IrisBox.prototype.updateSize = function(){
 	
 };
 
-/****/
+/****
+draw
+boxの描画
+****/
 IrisBox.prototype.draw = function(){
 	var prop = this.prop, 
 		borderWidth = prop.borderWidth;
@@ -348,8 +326,8 @@ Object.defineProperty(IrisCircle.prototype, 'center', {
 });
 
 /****
-center
-円の中心
+y
+円の中心 y
 ****/
 Object.defineProperty(IrisCircle.prototype, 'y', {
 	get: function(){
@@ -362,8 +340,8 @@ Object.defineProperty(IrisCircle.prototype, 'y', {
 });
 
 /****
-center
-円の中心
+x
+円の中心 x
 ****/
 Object.defineProperty(IrisCircle.prototype, 'x', {
 	get: function(){
@@ -377,7 +355,10 @@ Object.defineProperty(IrisCircle.prototype, 'x', {
 
 
 
-/****/
+/****
+draw
+circleの描画
+****/
 IrisCircle.prototype.draw = function(){
 	var r = this.radius,
 		ctx = this.ctx,
@@ -396,6 +377,7 @@ IrisCircle.prototype.draw = function(){
 			ctx.fill();
 		}
 		
+		ctx.save();
 		ctx.beginPath();
 		ctx.arc( x, y, r, 0, Math.PI * 2, false);
 		ctx.clip();
@@ -430,9 +412,9 @@ IrisCircle.prototype.draw = function(){
 			ctx.fill();
 			
 		}
+		ctx.restore();
 		
 	}
-
 };
 
 /****
@@ -662,7 +644,6 @@ metrics.bgColor、metrics.borderColor、circle.color、circle.borderColorの指�
 @return this
 ****/
 Phaser.Plugin.Iris.prototype.setup = function(metrics, circle){
-	
 	var prop = {};
 	_extends(prop, metrics, {x:0, y:0, width:this.game.world.width, height:this.game.world.height});
 	
@@ -723,7 +704,7 @@ Phaser.Plugin.Iris.prototype.sendToBack = function(){
 
 /****
 inBox
-pointがthis.width、this.height内に内包しているかを求める
+pointがboxに内包しているかを求める
 @param point {Phaser.Point} - {x, y}
 @param inBorder {boolean: false} - borderを含めるかどうか
 @return {boolean} - trueなら内包する
@@ -846,7 +827,7 @@ radius自動増減アニメーションを行う。
 ****/
 Phaser.Plugin.Iris.prototype.tween = function(fn, thisObj, to, duration, totally, easing){
 	
-	if( this.busy || !this.base.parent ){
+	if( ((this._tween)?this._tween.isRunning:false) || !this.base.parent ){
 		return this;
 	}
 	
