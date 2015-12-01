@@ -1,7 +1,7 @@
 /**
 * @author       Wataru Kanzaki <dab@wi-wi.jp>
 * @copyright    2015 Wicker Wings
-* @version      2.3.1
+* @version      2.3.2
 * @license      {@link https://github.com/heporap/Phaser.iris/blob/master/LICENSE.txt|MIT License}
 */
 (function(constructor){
@@ -353,7 +353,19 @@ Object.defineProperty(IrisCircle.prototype, 'x', {
 	}
 });
 
-
+/****
+borderWidth
+円のボーダー
+****/
+Object.defineProperty(IrisCircle.prototype, 'borderWidth', {
+	get: function(){
+		return this.prop.borderWidth;
+	},
+	set: function(val){
+		this.prop.borderWidth = val;
+		this.parent.dirty = true;
+	}
+});
 
 /****
 draw
